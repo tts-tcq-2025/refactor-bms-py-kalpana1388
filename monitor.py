@@ -1,52 +1,32 @@
 from time import sleep
 import sys
 
-# ----------------------------
-# PURE LOGIC FUNCTIONS
-# ----------------------------
-
-def is_temperature_ok(temperature):
-    return 95 <= temperature <= 102
-
-def is_pulse_ok(pulse_rate):
-    return 60 <= pulse_rate <= 100
-
-def is_spo2_ok(spo2):
-    return spo2 >= 90
-
-def check_vitals(temperature, pulse_rate, spo2):
-    if not is_temperature_ok(temperature):
-        return "Temperature critical!"
-    if not is_pulse_ok(pulse_rate):
-        return "Pulse Rate is out of range!"
-    if not is_spo2_ok(spo2):
-        return "Oxygen Saturation out of range!"
-    return None
-
-# ----------------------------
-# I/O FUNCTIONS
-# ----------------------------
-
-def alert_animation():
-    for _ in range(6):
+def blink_alert(times=6, delay=1):
+    """Simple blinking alert animation."""
+    for _ in range(times):
         print('\r* ', end='')
         sys.stdout.flush()
-        sleep(1)
+        sleep(delay)
         print('\r *', end='')
         sys.stdout.flush()
-        sleep(1)
+        sleep(delay)
 
-def notify_and_alert(message):
+def alert(message):
+    """Display critical alert message with blinking animation."""
     print(message)
-    alert_animation()
+    blink_alert()
 
-# ----------------------------
-# WRAPPER FUNCTION
-# ----------------------------
-
-def vitals_ok(temperature, pulse_rate, spo2):
-    message = check_vitals(temperature, pulse_rate, spo2)
-    if message:
-        notify_and_alert(message)
+def vitals_ok(temperature, pulseRate, spo2):
+    if temperature > 102 or temperature < 95:
+        alert('Temperature critical!')
         return False
+
+    if pulseRate < 60 or pulseRate > 100:
+        alert('Pulse Rate is out of range!')
+        return False
+
+    if spo2 < 90:
+        alert('Oxygen Saturation out of range!')
+        return False
+
     return True
